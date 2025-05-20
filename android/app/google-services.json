@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "594791446027",
+    "project_id": "vilmartdb-95d18",
+    "storage_bucket": "vilmartdb-95d18.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594791446027:android:081bfccf504e65bed5390e",
+        "android_client_info": {
+          "package_name": "com.example.vilmart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCURez-K8PnmYulgSjwAUty7vbEuc9QQnc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
