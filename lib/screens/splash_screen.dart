@@ -17,33 +17,37 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigate();
+    _navigateAfterDelay();
   }
 
-  Future<void> _navigate() async {
+  Future<void> _navigateAfterDelay() async {
     await Future.delayed(const Duration(seconds: 3));
     try {
       final String? uid = await _storage.read(key: 'uid');
-      if (uid != null && uid.isNotEmpty) {
-        context.go('/home');
-      } else {
-        context.go('/');
+      if (context.mounted) {
+        if (uid != null && uid.isNotEmpty) {
+          context.go('/home');
+        } else {
+          context.go('/');
+        }
       }
     } catch (e) {
-      print('Error reading from secure storage: $e');
-      context.go('/');
+      debugPrint('Error reading from secure storage: $e');
+      if (context.mounted) {
+        context.go('/login');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
-      splash: Container(
-        width: MediaQuery.of(context).size.width*0.6,
-        height: MediaQuery.of(context).size.width*0.6,
-        child: Image.asset(
-          'assets/images/splash.gif',fit:BoxFit.fill,),
+      splash: Image.asset(
+        'assets/images/icon.png',
+        width: 400,
+        height: 400,
       ),
+      splashIconSize: 450,
       nextScreen: const SizedBox.shrink(),
       splashTransition: SplashTransition.fadeTransition,
       duration: 3000,

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:vilmart/data/repositories/home_repository.dart';
 import 'package:vilmart/data/repositories/login_repositories.dart';
 import 'package:vilmart/data/repositories/product_add_repository.dart';
@@ -14,13 +15,10 @@ import 'package:vilmart/router/router_config.dart';
 
 import 'bloc/add_to_cart/add_to_cart_bloc.dart';
 import 'bloc/product_category_bloc/store_category_bloc.dart';
+
 import 'data/repositories/add_to_cart_repository.dart';
 import 'data/repositories/product_category_repository.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'data/services/profile_service.dart';
-// other imports ...
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,7 +47,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<ProductCategoryRepository>(create: (_) => ProductCategoryRepository()),
         RepositoryProvider<AddToCartRepository>(create: (_) => AddToCartRepository()),
         RepositoryProvider<ProfileRepository>(
-          create: (_) => ProfileRepository(ProfileService()), // ✅ Fixed
+          create: (_) => ProfileRepository(ProfileService()),
         ),
       ],
       child: MultiBlocProvider(
@@ -64,7 +62,7 @@ class MyApp extends StatelessWidget {
               cartService: context.read<AddToCartRepository>(),
             ),
           ),
-          // Add other Blocs if any
+          // Add other Blocs if needed
         ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,

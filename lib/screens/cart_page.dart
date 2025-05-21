@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vilmart/screens/payment_page.dart';
 import '../bloc/add_to_cart/add_to_cart_bloc.dart';
 import '../bloc/add_to_cart/add_to_cart_event.dart';
 import '../bloc/add_to_cart/add_to_cart_state.dart';
@@ -96,7 +97,18 @@ class _CartPageState extends State<CartPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   child: ElevatedButton(
-                    onPressed: () => context.read<CartBloc>().add(CheckoutCart()),
+                    onPressed: ()async{
+                      final confirmed = await Navigator.of(context).push<bool>(
+                        MaterialPageRoute(
+                          builder: (_) => PaymentPage(amount: total),
+                        ),
+                      );
+
+                      if (confirmed == true) {
+                        // Payment success - now trigger checkout in bloc
+                        context.read<CartBloc>().add(CheckoutCart());
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.yellow.shade600,
                       shape: RoundedRectangleBorder(

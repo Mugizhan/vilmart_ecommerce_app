@@ -1,167 +1,301 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-part 'profile_model.g.dart';
-
-String _stringFromAny(dynamic value) => value?.toString() ?? '';
-double _doubleFromAny(dynamic value) => (value is num) ? value.toDouble() : double.tryParse(value.toString()) ?? 0.0;
-int _intFromAny(dynamic value) => (value is int) ? value : int.tryParse(value.toString()) ?? 0;
-
-@JsonSerializable()
 class UserProfile {
-  @JsonKey(name: 'username')
-  final String name;
-  final String email;
-
-  @JsonKey(name: 'number')
-  final int phoneNumber;
+  final String? id;
+  final String? username;
+  final String? email;
+  final String? role;
+  final int? number;
 
   UserProfile({
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
+    this.id,
+    this.username,
+    this.email,
+    this.role,
+    this.number,
   });
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileFromJson(json);
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      id: json['id'] ?? '',
+      username: json['username'] ?? '',
+      email: json['email'] ?? '',
+      role: json['role'] ?? '',
+      number: json['number'] is int
+          ? json['number']
+          : int.tryParse(json['number'].toString()) ?? 0,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$UserProfileToJson(this);
+  @override
+  String toString() {
+    return 'UserProfile(id: $id, username: $username, email: $email, role: $role, number: $number)';
+  }
 }
 
-@JsonSerializable()
 class Shop {
-  final String shopId;
-  final String shopName;
-  final String category;
-  final String email;
-  final String gst;
-
-  @JsonKey(fromJson: _stringFromAny)
-  final String phone;
-
-  final String ownerId;
-  final String ownerName;
-
-  @JsonKey(fromJson: _stringFromAny)
-  final String rating;
-
-  final String shopImageLink;
-  final Address address;
-  final LatLon latlon;
+  final String? id;
+  final String? shopName;
+  final String? shopImageLink;
+  final String? description;
+  final String? category;
+  final String? email;
+  final String? gst;
+  final String? phone;
+  final String? ownerId;
+  final String? ownerName;
+  final String? rating;
+  final Address? address;
+  final LatLon? latlon;
 
   Shop({
-    required this.shopId,
-    required this.shopName,
-    required this.category,
-    required this.email,
-    required this.gst,
-    required this.phone,
-    required this.ownerId,
-    required this.ownerName,
-    required this.rating,
-    required this.shopImageLink,
-    required this.address,
-    required this.latlon,
+    this.id,
+    this.shopName,
+    this.shopImageLink,
+    this.description,
+    this.category,
+    this.email,
+    this.gst,
+    this.phone,
+    this.ownerId,
+    this.ownerName,
+    this.rating,
+    this.address,
+    this.latlon,
   });
 
-  factory Shop.fromJson(Map<String, dynamic> json) => _$ShopFromJson(json);
+  factory Shop.fromJson(Map<String, dynamic> json) {
+    return Shop(
+      id: json['shopId'] ?? '',
+      shopName: json['shopName'] ?? '',
+      shopImageLink: json['shopImageLink'] ?? '',
+      description: json['description'],
+      category: json['category'] ?? '',
+      email: json['email'] ?? '',
+      gst: json['gst'] ?? '',
+      phone: json['phone'] ?? '',
+      ownerId: json['ownerId'] ?? '',
+      ownerName: json['ownerName'] ?? '',
+      rating: json['rating'] ?? '0',
+      address: Address.fromJson(json['address'] ?? {}),
+      latlon: LatLon.fromJson(json['latlon'] ?? {}),
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$ShopToJson(this);
+  @override
+  String toString() {
+    return 'Shop(id: $id, shopName: $shopName, image: $shopImageLink, category: $category, owner: $ownerName, email: $email, phone: $phone, rating: $rating, address: $address, latlon: $latlon)';
+  }
 }
 
-@JsonSerializable()
 class Address {
-  final String address;
-  final String city;
-  final String state;
-  final String country;
-
-  @JsonKey(fromJson: _stringFromAny)
-  final String pincode;
+  final String? address;
+  final String? city;
+  final String? state;
+  final String? country;
+  final String? pincode;
 
   Address({
-    required this.address,
-    required this.city,
-    required this.state,
-    required this.country,
-    required this.pincode,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.pincode,
   });
 
-  factory Address.fromJson(Map<String, dynamic> json) =>
-      _$AddressFromJson(json);
+  factory Address.fromJson(Map<String, dynamic> json) {
+    return Address(
+      address: json['address'] ?? '',
+      city: json['city'] ?? '',
+      state: json['state'] ?? '',
+      country: json['country'] ?? '',
+      pincode: json['pincode'] ?? '',
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$AddressToJson(this);
+  @override
+  String toString() {
+    return '$address, $city, $state, $country - $pincode';
+  }
 }
 
-@JsonSerializable()
 class LatLon {
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
 
   LatLon({
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
   });
 
-  factory LatLon.fromJson(Map<String, dynamic> json) =>
-      _$LatLonFromJson(json);
+  factory LatLon.fromJson(Map<String, dynamic> json) {
+    return LatLon(
+      latitude: (json['latitude'] is num) ? json['latitude'].toDouble() : 0.0,
+      longitude: (json['longitude'] is num) ? json['longitude'].toDouble() : 0.0,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$LatLonToJson(this);
+  @override
+  String toString() {
+    return 'Lat: $latitude, Lon: $longitude';
+  }
 }
 
-@JsonSerializable()
-class CartItem {
-  final String productId;
-  final String name;
-  final int quantity;
-  final double price;
-
-  CartItem({
-    required this.productId,
-    required this.name,
-    required this.quantity,
-    required this.price,
-  });
-
-  factory CartItem.fromJson(Map<String, dynamic> json) =>
-      _$CartItemFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CartItemToJson(this);
-}
-
-@JsonSerializable()
 class Order {
-  final String orderId;
-  final String userId;
-  final List<CartItem> items;
-  final double total;
+  final String? id;
+  final String? sellerId;
+  final String? userId;
+  final String? status;
+  final DateTime? timestamp;
+  final OrderItem? item;
 
   Order({
-    required this.orderId,
-    required this.userId,
-    required this.items,
-    required this.total,
+    this.id,
+    this.sellerId,
+    this.userId,
+    this.status,
+    this.timestamp,
+    this.item,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) =>
-      _$OrderFromJson(json);
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      id: json['id'] ?? '',
+      sellerId: json['sellerId'] ?? '',
+      userId: json['userId'] ?? '',
+      status: json['status'] ?? '',
+      timestamp: (json['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      item: OrderItem.fromJson(json['item'] ?? {}),
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$OrderToJson(this);
+  @override
+  String toString() {
+    return 'Order(id: $id, sellerId: $sellerId, userId: $userId, status: $status, timestamp: $timestamp, item: $item)';
+  }
 }
 
-@JsonSerializable()
-class CompleteUserData {
-  final UserProfile userProfile;
-  final List<Shop> userShops;
-  final List<Order>? userOrders;
+class OrderItem {
+  final String? productId;
+  final String? productName;
+  final String? imageUrl;
+  final double? price;
+  final int? quantity;
 
-  CompleteUserData({
-    required this.userProfile,
-    required this.userShops,
-    this.userOrders,
+  OrderItem({
+    this.productId,
+    this.productName,
+    this.imageUrl,
+    this.price,
+    this.quantity,
   });
 
-  factory CompleteUserData.fromJson(Map<String, dynamic> json) =>
-      _$CompleteUserDataFromJson(json);
+  factory OrderItem.fromJson(Map<String, dynamic> json) {
+    return OrderItem(
+      productId: json['productId'] ?? '',
+      productName: json['productName'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      quantity: (json['quantity'] as int?) ?? 0,
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$CompleteUserDataToJson(this);
+  @override
+  String toString() {
+    return 'OrderItem(productId: $productId, name: $productName, price: $price, quantity: $quantity, imageUrl: $imageUrl)';
+  }
+}
+
+class CartItem {
+  final String? productId;
+  final String? productName;
+  final String? imageUrl;
+  final double? price;
+  final int? quantity;
+  final String? sellerId;
+
+  CartItem({
+    this.productId,
+    this.productName,
+    this.imageUrl,
+    this.price,
+    this.quantity,
+    this.sellerId,
+  });
+
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    return CartItem(
+      productId: json['productId'] ?? '',
+      productName: json['productName'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      quantity: (json['quantity'] as int?) ?? 0,
+      sellerId: json['sellerId'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'productId': productId,
+      'productName': productName,
+      'imageUrl': imageUrl,
+      'price': price,
+      'quantity': quantity,
+      'sellerId': sellerId,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'CartItem(productId: $productId, productName: $productName, imageUrl: $imageUrl, price: $price, quantity: $quantity, sellerId: $sellerId)';
+  }
+}
+
+class CompleteUserData {
+  final UserProfile? userProfile;
+  final List<Shop>? userShops;
+  final List<Order>? orders;
+  final List<CartItem>? cartItems;
+
+  CompleteUserData({
+    this.userProfile,
+    this.userShops,
+    this.orders,
+    this.cartItems,
+  });
+
+  factory CompleteUserData.fromJson(Map<String, dynamic> json) {
+    return CompleteUserData(
+      userProfile: UserProfile.fromJson(json['userProfile'] ?? {}),
+      userShops: (json['userShops'] as List<dynamic>?)
+          ?.map((e) => Shop.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
+      orders: (json['orders'] as List<dynamic>?)
+          ?.map((e) => Order.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
+      cartItems: (json['cartItems'] as List<dynamic>?)
+          ?.map((e) => CartItem.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
+    );
+  }
+
+  @override
+  String toString() {
+    return '''
+--- User Profile ---
+$userProfile
+
+--- Shops ---
+${userShops?.map((s) => s.toString()).join('\n')}
+
+--- Orders ---
+${orders?.map((o) => o.toString()).join('\n')}
+
+--- Cart Items ---
+${cartItems?.map((c) => c.toString()).join('\n')}
+''';
+  }
 }

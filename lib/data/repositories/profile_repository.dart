@@ -6,7 +6,26 @@ class ProfileRepository {
 
   ProfileRepository(this._profileService);
 
-  Future<CompleteUserData> fetchUserProfileAndShops() {
-    return _profileService.getUserProfileAndShops();
+  Future<CompleteUserData> fetchUserProfileShopsOrdersCart() async {
+    try {
+      final CompleteUserData? data = await _profileService.getUserProfileShopsOrdersCart();
+
+      if (data == null) {
+        // Return empty default data or throw error based on your logic
+        print('Warning: fetched CompleteUserData is null, returning empty data');
+        return CompleteUserData(
+          userProfile: UserProfile(),
+          userShops: [],
+          orders: [],
+          cartItems: [],
+        );
+      }
+
+
+      return data;
+    } catch (e) {
+      print('Error fetching CompleteUserData: $e');
+      rethrow;
+    }
   }
 }

@@ -211,7 +211,7 @@ class ProductDetailPage extends StatelessWidget {
                               price: product.price,
                               quantity: 1,
                               sellerId: shopId,
-                              imageUrl: product.productImages
+                              imageUrl: product.productImages,
                             );
 
                             context.read<CartBloc>().add(AddItemToCart(cartItem));

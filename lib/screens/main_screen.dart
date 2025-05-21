@@ -7,6 +7,7 @@ import '../bloc/add_to_cart/add_to_cart_bloc.dart';
 import '../bloc/add_to_cart/add_to_cart_state.dart';
 import '../bloc/profile_bloc/profile_bloc.dart';
 import '../data/repositories/profile_repository.dart';
+import 'shop_screen.dart';
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -40,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       return [
         const HomeScreen(),
-        const Center(child: Text("Favorite")),
+        CataegoryScreen(location: 'coimbatore',),
         const CartPage(),
         BlocProvider(
           create: (context) => ProfileBloc(
@@ -71,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
             label: '',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.star),
+            icon: Icon(Icons.store),
             label: '',
           ),
           BottomNavigationBarItem(

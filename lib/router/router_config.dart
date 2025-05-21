@@ -6,6 +6,7 @@ import '../screens/add_product.dart';
 import '../screens/add_store.dart';
 import '../screens/category/product_detail_page.dart';
 import '../screens/category/shop_product.dart';
+import '../screens/generate_qr.dart';
 import '../screens/login_screen.dart';
 import '../screens/main_screen.dart';
 import '../screens/registration_screen.dart';
@@ -61,6 +62,11 @@ Future<GoRouter> createRouter() async {
                               final shopId=state.pathParameters['shopId'];
                               return ShopProduct(shopId: shopId!);
                         }
+                  ),
+                  GoRoute(
+                        name: 'qr',
+                        path: '/qr',
+                        builder: (context, state) => QRGeneratorScreen(), // NOT QRViewScreen
                   ),
 
             ],

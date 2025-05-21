@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vilmart/screens/qr_screen.dart';
 import '../bloc/form_bloc/data_fetch_status.dart';
 import '../bloc/home_bloc/home_bloc.dart';
 import '../bloc/home_bloc/home_event.dart';
@@ -76,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _getUserData() async {
     String? userName = await secureStorage.read(key: 'userName');
+    String? shopId = await secureStorage.read(key: 'shopId');
     print('userName:${userName}');
     if (userName != null) {
       setState(() {
@@ -165,6 +166,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     surfaceTintColor: Colors.white,
                     leading: IconButton(onPressed: (){}, icon: const Icon(Icons.grid_view_rounded,size: 30,color: Colors.black,)),
                       actions: [
+                        IconButton(
+                          onPressed: () async {
+                            final scannedCode = await Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const QRViewScreen()),
+                            );
+
+                            if (scannedCode != null) {
+                              // Do something with the scanned result
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Scanned: $scannedCode')),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.qr_code_scanner_rounded, color: Colors.black),
+                        ),
+
+                        SizedBox(width: 20),
                         Center(
                           child: PopupMenuButton<String>(
                             offset: const Offset(0, 50),
@@ -179,6 +198,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   break;
                                 case 'product':
                                   context.push('/product');
+                                  break;
+                                case 'qr':
+                                  context.push('/qr');
                                   break;
                                 case 'logout':
                                   context.go('/');
@@ -199,6 +221,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListTile(
                                   leading: Icon(Icons.shopping_bag),
                                   title: Text('Add Products'),
+                                ),
+                              ),
+                              const PopupMenuDivider(height: 0),
+                              const PopupMenuItem(
+                                  value: 'qr',
+                                child: ListTile(
+                                  leading: Icon(Icons.qr_code_outlined),
+                                  title: Text('Generate QR'),
                                 ),
                               ),
                               const PopupMenuDivider(height: 0),
